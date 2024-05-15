@@ -36,17 +36,13 @@ pipeline{
         stage ('test the code'){
             steps{
                 sshagent([secret]){
-                    script """
-                        def command = """
-                        ssh -o StrictHostKeyChecking=no ${server} << EOF
-                            cd ${directory}
-                            docker run -d testcode -p 5009:5000 ${namebuild}
-                            docker rm -f testcode
-                            echo "Selesai Testing!"
-                            exit
-                        EOF"""
-                        sh command
-                    """
+                    sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
+                        cd ${directory}
+                        docker run -d testcode -p 5009:5000 ${namebuild}
+                        docker rm -f testcode
+                        echo "Selesai Testing!"
+                        exit
+                    EOF"""
                 }
             }
         }
