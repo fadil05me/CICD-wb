@@ -39,6 +39,13 @@ pipeline{
                     sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
                         cd ${directory}
                         docker run -d testcode -p 5009:5000 ${namebuild}
+                        if wget --spider -q --server-response http://127.0.0.1:5000/ 2>&1 | grep '404 Not Found'; then
+                            echo "Webserver is up and returning 404 as expected!"
+                        else
+                            echo "Webserver is not responding with expected 404, stopping the process."
+                            docker rm -f testcode
+                            exit 1
+                        fi
                         docker rm -f testcode
                         echo "Selesai Testing!"
                         exit
@@ -58,8 +65,6 @@ pipeline{
                     exit
                     EOF"""
                 }
-                
-                discordSend description: 'test desc', footer: '', image: '', link: '', result: 'SUCCESS', scmWebUrl: '', thumbnail: '', title: 'Discord Notif', webhookURL: 'https://discord.com/api/webhooks/1240246717505474601/eSqwzll5dezuF9pzrq9BPjq_-QCsaAmV6-vHVvH_HKoodz2XA4GLgomv03OQT7_mojik'
             }
         }
     }
