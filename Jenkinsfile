@@ -1,8 +1,8 @@
-def secret = 'k2-appserver'
-def server = 'k2@103.127.134.73'
-def directory = '/home/k2/wayshub-backend'
-def branch = 'master'
-def namebuild = 'wayshub-backend:1.0'
+def secret = "k2-appserver"
+def server = "k2@103.127.134.73"
+def directory = "/home/k2/wayshub-backend"
+def branch = "master"
+def namebuild = "wayshub-backend:1.0"
 
 pipeline{
     agent any
