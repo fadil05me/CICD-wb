@@ -37,25 +37,25 @@ pipeline{
             steps{
                 sshagent([secret]){
                     script """
-                        sh """
+                        def command = """
                         ssh -o StrictHostKeyChecking=no ${server} << EOF
-                        cd ${directory}
-                        docker run -d testcode -p 5009:5000 ${namebuild}
-                        SERVER_URL="http://127.0.0.1:5009"
-                        OUTPUT=$(wget --quiet --spider --server-response "$SERVER_URL" 2>&1)
-                        docker rm -f testcode
+                            cd ${directory}
+                            docker run -d testcode -p 5009:5000 ${namebuild}
+                            SERVER_URL="http://127.0.0.1:5009"
+                            OUTPUT=$(wget --quiet --spider --server-response "$SERVER_URL" 2>&1)
+                            docker rm -f testcode
 
-                        if grep -i "404 Not Found" <<< "$OUTPUT" >/dev/null 2>&1; then
+                            if grep -i "404 Not Found" <<< "$OUTPUT" >/dev/null 2>&1; then
                             echo "Website is up."
-                        else
+                            else
                             echo "Website is down."
                             exit 1
-                        fi
+                            fi
 
-                        echo "Selesai Building!"  # Moved outside the if block
-                        exit
-                        EOF
-                        """
+                            echo "Selesai Building!"
+                            exit
+                        EOF"""
+                        sh command
                     """
                 }
             }
