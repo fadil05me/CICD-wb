@@ -37,13 +37,13 @@ pipeline{
             steps{
                 sshagent([secret]){
                     sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
-                    cd \$directory
-                    docker run -d testcode -p 5009:5000 \$namebuild
+                    cd ${directory}
+                    docker run -d testcode -p 5009:5000 ${namebuild}
                     SERVER_URL="http://127.0.0.1:5009"
-                    OUTPUT=$(wget --quiet --spider --server-response "$SERVER_URL" 2>&1)
+                    OUTPUT=$(wget --quiet --spider --server-response "\$SERVER_URL" 2>&1)
                     docker rm -f testcode
 
-                    if grep -i "404 Not Found" <<< "$OUTPUT" >/dev/null 2>&1; then
+                    if grep -i "404 Not Found" <<< "\$OUTPUT" >/dev/null 2>&1; then
                     echo "Website is up."
                     else
                     echo "Website is down."
