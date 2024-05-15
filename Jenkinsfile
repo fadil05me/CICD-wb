@@ -10,7 +10,7 @@ pipeline{
         stage ('pull new code'){
             steps{
                 sshagent([secret]){
-                    sh """ssh -o StrickHostKeyChecking=no ${server} << EOF
+                    sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
                     cd ${directory}
                     git pull origin ${branch}
                     echo "Selesai Pulling!"
@@ -23,7 +23,7 @@ pipeline{
         stage ('build the code'){
             steps{
                 sshagent([secret]){
-                    sh """ssh -o StrickHostKeyChecking=no ${server} << EOF
+                    sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
                     cd ${directory}
                     docker build -t ${namebuild} .
                     echo "Selesai Building!"
@@ -36,7 +36,7 @@ pipeline{
         stage ('deploy'){
             steps {
                 sshagent([secret]){
-                    sh """ssh -o StrickHostKeyChecking=no ${server} << EOF
+                    sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
                     cd ${directory}
                     docker compose down
                     docker compose up -d
