@@ -73,14 +73,16 @@ pipeline{
         stage('push to Docker Hub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: dockerHubCredentials, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                    sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
-                    cd ${directory}
-                    docker login -u $DOCKER_USER -p $DOCKER_PASS
-                    docker tag ${namebuild} ${dockerHubRepo}:latest
-                    docker push ${dockerHubRepo}:latest
-                    echo "Selesai Push ke Docker Hub!"
-                    exit
-                    EOF"""
+                    sshagent([secret]) {
+                        sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
+                        cd ${directory}
+                        echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                        docker tag ${namebuild} ${dockerHubRepo}:latest
+                        docker push ${dockerHubRepo}:latest
+                        echo "Selesai Push ke Docker Hub!"
+                        exit
+                        EOF"""
+                    }
                 }
             }
         }
