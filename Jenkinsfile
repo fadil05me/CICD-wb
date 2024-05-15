@@ -3,6 +3,8 @@ def server = 'k2@103.127.134.73'
 def directory = '/home/k2/wayshub-backend'
 def branch = 'master'
 def namebuild = 'wayshub-backend:1.0'
+def dockerHubCredentials = 'docker-hub-credentials'
+def dockerHubRepo = 'fadil05me/wayshub-backend'
 
 pipeline{
     agent any
@@ -62,6 +64,21 @@ pipeline{
                     docker compose down
                     docker compose up -d
                     echo "Selesai Men-Deploy!"
+                    exit
+                    EOF"""
+                }
+            }
+        }
+
+        stage('push to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: dockerHubCredentials, usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
+                    cd ${directory}
+                    docker login -u $DOCKER_USER -p $DOCKER_PASS
+                    docker tag ${namebuild} ${dockerHubRepo}:latest
+                    docker push ${dockerHubRepo}:latest
+                    echo "Selesai Push ke Docker Hub!"
                     exit
                     EOF"""
                 }
