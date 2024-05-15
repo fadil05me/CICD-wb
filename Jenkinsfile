@@ -1,8 +1,8 @@
-def secret = "k2-appserver"
-def server = "k2@103.127.134.73"
-def directory = "/home/k2/wayshub-backend"
-def branch = "master"
-def namebuild = "wayshub-backend:1.0"
+def secret = 'k2-appserver'
+def server = 'k2@103.127.134.73'
+def directory = '/home/k2/wayshub-backend'
+def branch = 'master'
+def namebuild = 'wayshub-backend:1.0'
 
 pipeline{
     agent any
@@ -37,8 +37,8 @@ pipeline{
             steps{
                 sshagent([secret]){
                     sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
-                    cd "${directory}"
-                    docker run -d testcode -p 5009:5000 "${namebuild}"
+                    cd \${directory}
+                    docker run -d testcode -p 5009:5000 \${namebuild}
                     SERVER_URL="http://127.0.0.1:5009"
                     OUTPUT=$(wget --quiet --spider --server-response "$SERVER_URL" 2>&1)
                     docker rm -f testcode
