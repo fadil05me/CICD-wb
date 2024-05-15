@@ -58,6 +58,8 @@ pipeline{
                     exit
                     EOF"""
                 }
+                
+                discordSend description: 'test desc', footer: '', image: '', link: '', result: 'SUCCESS', scmWebUrl: '', thumbnail: '', title: 'Discord Notif', webhookURL: 'https://discord.com/api/webhooks/1240246717505474601/eSqwzll5dezuF9pzrq9BPjq_-QCsaAmV6-vHVvH_HKoodz2XA4GLgomv03OQT7_mojik'
             }
         }
     }
