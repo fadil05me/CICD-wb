@@ -36,7 +36,7 @@ pipeline{
         stage ('test the code'){
             steps{
                 sshagent([secret]){
-                    sh """ssh -o StrictHostKeyChecking=no \$server << EOF
+                    sh """ssh -o StrictHostKeyChecking=no ${server} << EOF
                     cd \$directory
                     docker run -d testcode -p 5009:5000 \$namebuild
                     SERVER_URL="http://127.0.0.1:5009"
