@@ -42,12 +42,15 @@ pipeline{
                     SERVER_URL="http://127.0.0.1:5009"
                     OUTPUT=$(wget --quiet --spider --server-response "$SERVER_URL" 2>&1)
                     docker rm -f testcode
+
                     if grep -i "404 Not Found" <<< "$OUTPUT" >/dev/null 2>&1; then
-                        echo "Website is up."
+                    echo "Website is up."
                     else
-                        echo "Website is down."
+                    echo "Website is down."
+                    exit 1
                     fi
-                    echo "Selesai Building!"
+
+                    echo "Selesai Building!"  # Moved outside the if block
                     exit
                     EOF"""
                 }
